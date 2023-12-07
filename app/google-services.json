@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1033866864566",
+    "project_id": "askarcinema-cd517",
+    "storage_bucket": "askarcinema-cd517.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033866864566:android:ae73a066b51f317dea0317",
+        "android_client_info": {
+          "package_name": "com.example.askarcinema"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgyNG65ID1hB8-5_7bKC9Th630HVkANVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
