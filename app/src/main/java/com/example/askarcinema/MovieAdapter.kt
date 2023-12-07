@@ -7,11 +7,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.askarcinema.MovieData
-import com.example.askarcinema.R
 
-class MovieAdapter(private val movieList: List<MovieData>) :
-    RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+class MovieAdapter(
+    private val movieList: List<MovieData>,
+    private val onItemLongClickListener: OnItemLongClickListener? = null
+) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+
+    interface OnItemLongClickListener {
+        fun onItemLongClick(movieData: MovieData)
+    }
 
     class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.txt_movie_title)
@@ -32,6 +36,12 @@ class MovieAdapter(private val movieList: List<MovieData>) :
         Glide.with(holder.itemView.context)
             .load(currentItem.imageUrl)
             .into(holder.image)
+
+        // Set the long click listener
+        holder.itemView.setOnLongClickListener {
+            onItemLongClickListener?.onItemLongClick(currentItem)
+            true
+        }
     }
 
     override fun getItemCount() = movieList.size

@@ -1,11 +1,9 @@
 package com.example.askarcinema
 
-//data class MovieData(val title: String, val imageUrl: String)
-
 data class MovieData(
     var title: String = "",
-    var imageUrl: String = ""
+    var imageUrl: String = "",
+    var movieId: String? = null // Make movieId nullable
 ) {
-    // Add a no-argument constructor
-    constructor() : this("", "")
+    constructor() : this("", "", null)
 }

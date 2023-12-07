@@ -25,6 +25,7 @@ class LoginRegisterActivity : AppCompatActivity() {
                 1 -> "Login"
                 2 -> "Upload"
                 3 -> "Cinema"
+                4 -> "Monitor"
                 else -> "Invalid"
             }
         }.attach()

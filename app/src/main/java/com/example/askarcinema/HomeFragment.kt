@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.askarcinema.databinding.FragmentHomeBinding
 import com.google.firebase.database.*
 
+// ... existing imports ...
+
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var movieAdapter: MovieAdapter
