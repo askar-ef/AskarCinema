@@ -1,9 +1,11 @@
 package com.example.askarcinema
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.askarcinema.databinding.FragmentHomeBinding
@@ -11,24 +13,28 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-
-class HomeActivity : AppCompatActivity() {
+class MoviesFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var movieList: MutableList<MovieData>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentHomeBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         movieList = mutableListOf()
         movieAdapter = MovieAdapter(movieList)
 
         val recyclerView: RecyclerView = binding.filmRecyclerView
         recyclerView.adapter = movieAdapter
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
         // Fetch data from Firebase and update movieList
         fetchMoviesFromFirebase()

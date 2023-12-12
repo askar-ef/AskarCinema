@@ -23,9 +23,9 @@ class LoginRegisterActivity : AppCompatActivity() {
             tab.text = when (position) {
                 0 -> "Sign Up"
                 1 -> "Login"
-                2 -> "Upload"
-                3 -> "Cinema"
-                4 -> "Monitor"
+//                2 -> "Upload"
+//                3 -> "Cinema"
+//                4 -> "Monitor"
                 else -> "Invalid"
             }
         }.attach()

@@ -42,23 +42,34 @@ class LoginFragment : Fragment() {
                 val password = etPassword.text.toString()
 
                 if (email.isNotEmpty() && password.isNotEmpty()) {
-                    firebaseAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val uid = firebaseAuth.currentUser?.uid
+                    if ("$email@gmail.com" == "admin@gmail.com" && password == "adminadmin"){
+                        Toast.makeText(requireContext(), "bisa harusnya", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(requireContext(), AdminActivity::class.java)
+                        startActivity(intent)
 
-                                // Save login status to SharedPreferences
-                                saveLoginStatus(true)
+                    } else {
+                        firebaseAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val uid = firebaseAuth.currentUser?.uid
 
-                                // Check user type and navigate accordingly
-                                checkUserTypeAndNavigate(uid)
-                                val intent = Intent(requireContext(), HomeActivity::class.java)
-                                startActivity(intent)
+                                    // Save login status to SharedPreferences
+                                    saveLoginStatus(true)
+
+                                    // Check user type and navigate accordingly
+                                    checkUserTypeAndNavigate(uid)
+                                    val intent = Intent(requireContext(), UserActivity::class.java)
+                                    startActivity(intent)
 //                                Toast.makeText(requireContext(), "Pass Benar", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(requireContext(), "Login failed", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Login failed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
-                        }
+                    }
                 } else {
                     Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 }
