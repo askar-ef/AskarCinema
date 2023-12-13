@@ -41,25 +41,23 @@ class MonitorFragment : Fragment(), MovieAdapter.OnItemLongClickListener {
         fetchMoviesFromFirebase()
     }
 
-
-
     override fun onItemLongClick(movieData: MovieData) {
-        // Hapus data dari Firebase dan Storage
-        deleteMovieData(movieData)
+        // Pass selected movie data to EditActivity using a Bundle
+        val intent = Intent(requireContext(), EditActivity::class.java)
+        val bundle = Bundle()
+        bundle.putSerializable(EditActivity.EXTRA_MOVIE_DATA, movieData)
+        intent.putExtras(bundle)
+        startActivity(intent)
     }
 
     private fun deleteMovieData(movieData: MovieData) {
-//        val databaseReference = FirebaseDatabase.getInstance("https://askarcinema-cd517-default-rtdb.asia-southeast1.firebasedatabase.app/")
-//            .reference.child("movies").child(movieData.movieId)
-
-        val movieId = movieData.movieId ?: return // or handle the null case appropriately
+        val movieId = movieData.movieId ?: return
         val databaseReference = FirebaseDatabase.getInstance("https://askarcinema-cd517-default-rtdb.asia-southeast1.firebasedatabase.app/")
             .reference.child("movies").child(movieId)
 
-
         databaseReference.removeValue().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                // Hapus data dari Firebase Storage
+                // Delete data from Firebase Storage
                 deleteFromStorage(movieData.imageUrl)
             } else {
                 Log.e("Firebase", "Error deleting movie data", task.exception)
@@ -70,8 +68,8 @@ class MonitorFragment : Fragment(), MovieAdapter.OnItemLongClickListener {
     private fun deleteFromStorage(imageUrl: String) {
         val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
         storageReference.delete().addOnSuccessListener {
-            // Item berhasil dihapus dari Storage
-            // Refresh data di RecyclerView jika diperlukan
+            // Item successfully deleted from Storage
+            // Refresh data in RecyclerView if needed
             fetchMoviesFromFirebase()
         }.addOnFailureListener { exception ->
             Log.e("Firebase", "Error deleting image from Storage", exception)
@@ -84,14 +82,14 @@ class MonitorFragment : Fragment(), MovieAdapter.OnItemLongClickListener {
 
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                // Clear the existing data
+                // Clear existing data
                 movieList.clear()
 
                 // Iterate through the snapshot and add MovieData objects to movieList
                 for (dataSnapshot in snapshot.children) {
                     val movieData = dataSnapshot.getValue(MovieData::class.java)
                     movieData?.let {
-                        it.movieId = dataSnapshot.key // Set movieId from Firebase key
+                        it.movieId = dataSnapshot.key
                         movieList.add(it)
                     }
                 }
