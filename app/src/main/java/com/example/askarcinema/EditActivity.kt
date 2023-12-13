@@ -24,13 +24,6 @@ class EditActivity : AppCompatActivity() {
         // Get the selected movie data from the Bundle
         val movieData = intent.extras?.getSerializable(EXTRA_MOVIE_DATA) as? MovieData
 
-        // Update UI with the selected movie data
-        movieData?.let {
-            binding.etMovieTitle.setText(it.title)
-            Glide.with(this)
-                .load(it.imageUrl)
-                .into(binding.movieImagePreview)
-        }
 
         // Update UI with the selected movie data
         movieData?.let {
@@ -40,25 +33,25 @@ class EditActivity : AppCompatActivity() {
                 .into(binding.movieImagePreview)
         }
 
-        // Implement your edit functionality and update data to Firebase
-        binding.btnEdit.setOnClickListener {
-            // Get the updated values from UI
-            val updatedTitle = binding.etMovieTitle.text.toString()
+        with(binding) {
+            // Implement your edit functionality and update data to Firebase
+            btnEdit.setOnClickListener {
+                // Get the updated values from UI
+                val updatedTitle = binding.etMovieTitle.text.toString()
 
-            // Update the movieData object with the new values
-            movieData?.let {
-                it.title = updatedTitle
+                // Update the movieData object with the new values
+                movieData?.let {
+                    it.title = updatedTitle
+                }
+
+                // Perform the update in Firebase
+                updateDataInFirebase(movieData)
             }
-
-            // Perform the update in Firebase
-            updateDataInFirebase(movieData)
+            // Implement your delete functionality and update data to Firebase
+            btnDelete.setOnClickListener {
+                deleteDataFromFirebase(movieData)
+            }
         }
-        // Implement your delete functionality and update data to Firebase
-        binding.btnDelete.setOnClickListener {
-            deleteDataFromFirebase(movieData)
-        }
-
-        // Rest of the code...
     }
 
     private fun updateDataInFirebase(movieData: MovieData?) {
@@ -70,7 +63,6 @@ class EditActivity : AppCompatActivity() {
             databaseReference.setValue(it).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("Firebase", "Data updated successfully")
-                    // Finish the activity or perform any other action
                     finish()
                 } else {
                     Log.e("Firebase", "Error updating data", task.exception)
@@ -84,17 +76,13 @@ class EditActivity : AppCompatActivity() {
             val databaseReference = FirebaseDatabase.getInstance("https://askarcinema-cd517-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .reference.child("movies").child(it.movieId ?: "")
 
-            // Remove the data from Firebase
             databaseReference.removeValue().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("Firebase", "Data deleted successfully")
-                    // Show a toast message
                     showToast("Data deleted successfully")
-                    // Finish the activity or perform any other action
                     finish()
                 } else {
                     Log.e("Firebase", "Error deleting data", task.exception)
-                    // Show a toast message on failure
                     showToast("Error deleting data")
                 }
             }

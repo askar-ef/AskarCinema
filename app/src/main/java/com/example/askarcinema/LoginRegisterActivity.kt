@@ -24,18 +24,13 @@ class LoginRegisterActivity : AppCompatActivity() {
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
         if (isLoggedIn) {
-            // User is already logged in, navigate to the main activity
             val intent = Intent(this, UserActivity::class.java)
             startActivity(intent)
-            finish() // Finish the login activity to prevent going back
+            finish()
         } else {
-            // Setup ViewPager2 and TabLayout
             val adapter = LoginRegisterAdapter(this)
             binding.viewPagerLogreg.adapter = adapter
-
-            // Use TabLayoutMediator to connect TabLayout with ViewPager2
             TabLayoutMediator(binding.tabLayoutLogreg, binding.viewPagerLogreg) { tab, position ->
-                // You can customize tab labels if needed
                 tab.text = when (position) {
                     0 -> "Sign Up"
                     1 -> "Login"

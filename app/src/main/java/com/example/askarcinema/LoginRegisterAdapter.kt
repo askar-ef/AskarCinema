@@ -16,9 +16,6 @@ class LoginRegisterAdapter(fragmentActivity: FragmentActivity) : FragmentStateAd
         return when (position) {
             0 -> SignUpFragment()
             1 -> LoginFragment()
-//            2 -> UploadFragment()
-//            3 -> HomeFragment()
-//            4 -> MonitorFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
     }
