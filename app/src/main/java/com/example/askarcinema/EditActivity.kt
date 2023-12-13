@@ -2,6 +2,7 @@ package com.example.askarcinema
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.askarcinema.databinding.ActivityEditBinding
@@ -52,6 +53,10 @@ class EditActivity : AppCompatActivity() {
             // Perform the update in Firebase
             updateDataInFirebase(movieData)
         }
+        // Implement your delete functionality and update data to Firebase
+        binding.btnDelete.setOnClickListener {
+            deleteDataFromFirebase(movieData)
+        }
 
         // Rest of the code...
     }
@@ -72,5 +77,31 @@ class EditActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun deleteDataFromFirebase(movieData: MovieData?) {
+        movieData?.let {
+            val databaseReference = FirebaseDatabase.getInstance("https://askarcinema-cd517-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .reference.child("movies").child(it.movieId ?: "")
+
+            // Remove the data from Firebase
+            databaseReference.removeValue().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("Firebase", "Data deleted successfully")
+                    // Show a toast message
+                    showToast("Data deleted successfully")
+                    // Finish the activity or perform any other action
+                    finish()
+                } else {
+                    Log.e("Firebase", "Error deleting data", task.exception)
+                    // Show a toast message on failure
+                    showToast("Error deleting data")
+                }
+            }
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
