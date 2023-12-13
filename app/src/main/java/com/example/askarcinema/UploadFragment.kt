@@ -66,30 +66,29 @@ class UploadFragment : Fragment() {
         val storageReference = FirebaseStorage.getInstance().reference
         val imageRef = storageReference.child("images/${System.currentTimeMillis()}_image.jpg")
 
-        // Langsung lanjutkan proses upload
+        // Continue with the upload process
         uploadImageToFirebaseStorage(imageUri, imageRef)
     }
-
 
     private fun uploadImageToFirebaseStorage(imageUri: Uri, imageRef: StorageReference) {
         imageRef.putFile(imageUri)
             .addOnSuccessListener {
-                // Gambar berhasil diunggah
+                // Image successfully uploaded
                 getImageUrlAndSaveData(imageRef)
             }
             .addOnFailureListener { exception ->
-                // Penanganan kesalahan saat mengunggah gambar
-                Log.e("Firebase", "Gagal mengunggah gambar", exception)
+                // Handling error during image upload
+                Log.e("Firebase", "Failed to upload image", exception)
             }
     }
 
     private fun getImageUrlAndSaveData(imageRef: StorageReference) {
         imageRef.downloadUrl.addOnSuccessListener { uri ->
-            // File berhasil diunggah, dapatkan URL gambar
+            // File successfully uploaded, get the image URL
             val imageUrl = uri.toString()
             val movieTitle = binding.etMovieTitle.text.toString()
 
-            // Simpan data ke Firebase Database (Realtime Database atau Firestore)
+            // Save data to Firebase Database (Realtime Database or Firestore)
             saveDataToFirebaseDatabase(movieTitle, imageUrl)
         }
     }
@@ -100,15 +99,25 @@ class UploadFragment : Fragment() {
 
         val movieData = MovieData(movieTitle, imageUrl)
 
-        // Simpan data ke node 'movies'
+        // Save data to the 'movies' node
         databaseReference.push().setValue(movieData)
             .addOnSuccessListener {
-                // Data berhasil disimpan
+                // Data successfully saved
                 Toast.makeText(requireContext(), "Data berhasil disimpan", Toast.LENGTH_SHORT).show()
+
+                // After success, call the method to clear the form
+                clearForm()
             }
             .addOnFailureListener { exception ->
-                // Penanganan kesalahan saat menyimpan data
-                Log.e("Firebase", "Gagal menyimpan data di Firebase Database", exception)
+                // Handling error when saving data
+                Log.e("Firebase", "Failed to save data to Firebase Database", exception)
             }
+    }
+
+    private fun clearForm() {
+        // Clear the form after successful upload
+        binding.etMovieTitle.text.clear()
+        binding.movieImagePreview.setImageURI(null)
+        selectedImageUri = null
     }
 }

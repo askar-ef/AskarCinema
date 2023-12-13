@@ -1,5 +1,6 @@
 package com.example.askarcinema
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -39,6 +40,8 @@ class MonitorFragment : Fragment(), MovieAdapter.OnItemLongClickListener {
         // Fetch data from Firebase and update movieList
         fetchMoviesFromFirebase()
     }
+
+
 
     override fun onItemLongClick(movieData: MovieData) {
         // Hapus data dari Firebase dan Storage

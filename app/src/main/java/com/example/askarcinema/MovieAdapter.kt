@@ -13,6 +13,7 @@ class MovieAdapter(
     private val onItemLongClickListener: OnItemLongClickListener? = null
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
+
     interface OnItemLongClickListener {
         fun onItemLongClick(movieData: MovieData)
     }
