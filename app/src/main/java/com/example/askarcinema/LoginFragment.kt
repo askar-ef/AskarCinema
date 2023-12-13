@@ -85,8 +85,9 @@ class LoginFragment : Fragment() {
     private fun saveLoginStatus(isLoggedIn: Boolean) {
         val editor = sharedPreferences.edit()
         editor.putBoolean("isLoggedIn", isLoggedIn)
-        editor.apply()
+        editor.apply()  // Pastikan untuk memanggil apply() setelah melakukan perubahan
     }
+
 
     private fun checkUserTypeAndNavigate(uid: String?) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("users")
