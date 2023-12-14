@@ -1,4 +1,5 @@
 package com.example.askarcinema
+
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,14 +12,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.askarcinema.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var databaseReference: DatabaseReference
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +33,7 @@ class SignUpFragment : Fragment() {
 
         firebaseAuth = FirebaseAuth.getInstance()
         sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        databaseReference = FirebaseDatabase.getInstance("https://askarcinema-cd517-default-rtdb.asia-southeast1.firebasedatabase.app/").reference.child("accounts")
+        firestore = FirebaseFirestore.getInstance()
 
         with(binding) {
             btnSignup.setOnClickListener {
@@ -42,25 +42,20 @@ class SignUpFragment : Fragment() {
                 val username = etUsername.text.toString()
                 val password = etPassword.text.toString()
                 val role = "user"
-                val newAccount = Account("", email, fullname, username, password, role)
+                val newAccount = Account(email, fullname, username, password, role)
 
                 if (email.isNotEmpty() && fullname.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
                     firebaseAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                val accountId = databaseReference.push().key
-                                if (accountId != null) {
-                                    newAccount.id = accountId
-                                    addAccount(newAccount)
+                                // Save user data to Firestore
+                                saveUserDataToFirestore(newAccount)
 
-                                    // Save login status to SharedPreferences
-                                    saveLoginStatus(true)
+                                // Save login status to SharedPreferences
+                                saveLoginStatus(true)
 
-                                    // Navigate to HomeActivity or AdminActivity based on userType
-                                    navigateToHomeOrAdmin(role)
-                                } else {
-                                    Log.d("MainActivity", "Error generating account ID")
-                                }
+                                // Navigate to HomeActivity or AdminActivity based on userType
+                                navigateToHomeOrAdmin(role)
                             } else {
                                 Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
                             }
@@ -70,14 +65,19 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun addAccount(account: Account) {
-        val accountReference = databaseReference.child(account.id)
-        accountReference.setValue(account)
-            .addOnSuccessListener {
-                Log.d("MainActivity", "Account added successfully: $account")
+    private fun saveUserDataToFirestore(account: Account) {
+        firestore.collection("accounts")
+            .add(account)
+            .addOnSuccessListener { documentReference ->
+                Log.d("MainActivity", "DocumentSnapshot added with ID: ${documentReference.id}")
             }
-            .addOnFailureListener {
-                Log.d("MainActivity", "Error adding account: ", it)
+            .addOnFailureListener { e ->
+                Log.w("MainActivity", "Error adding document", e)
+                Toast.makeText(
+                    requireContext(),
+                    "Error adding document to Firestore: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
     }
 
