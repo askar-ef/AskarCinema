@@ -1,9 +1,9 @@
 package com.example.askarcinema
-
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.askarcinema.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class SignUpFragment : Fragment() {
     private lateinit var binding: FragmentSignUpBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,47 +33,52 @@ class SignUpFragment : Fragment() {
 
         firebaseAuth = FirebaseAuth.getInstance()
         sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        databaseReference = FirebaseDatabase.getInstance("https://askarcinema-cd517-default-rtdb.asia-southeast1.firebasedatabase.app/").reference.child("accounts")
 
         with(binding) {
             btnSignup.setOnClickListener {
                 val email = etEmail.text.toString()
+                val fullname = etFullname.text.toString()
                 val username = etUsername.text.toString()
                 val password = etPassword.text.toString()
+                val role = "user"
+                val newAccount = Account("", email, fullname, username, password, role)
 
-                if (email.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
+                if (email.isNotEmpty() && fullname.isNotEmpty() && username.isNotEmpty() && password.isNotEmpty()) {
                     firebaseAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                val uid = firebaseAuth.currentUser?.uid
-                                val userType = "public" // Set default type to public
+                                val accountId = databaseReference.push().key
+                                if (accountId != null) {
+                                    newAccount.id = accountId
+                                    addAccount(newAccount)
 
-                                // Save user type to Firebase Database
-                                saveUserTypeToDatabase(uid, userType)
+                                    // Save login status to SharedPreferences
+                                    saveLoginStatus(true)
 
-                                // Save login status to SharedPreferences
-                                saveLoginStatus(true)
-
-                                // Navigate to HomeActivity or AdminActivity based on userType
-                                navigateToHomeOrAdmin(userType)
+                                    // Navigate to HomeActivity or AdminActivity based on userType
+                                    navigateToHomeOrAdmin(role)
+                                } else {
+                                    Log.d("MainActivity", "Error generating account ID")
+                                }
                             } else {
                                 Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
                             }
                         }
                 }
             }
-
-//            btnToLogin.setOnClickListener {
-//                val intent = Intent(requireContext(), LoginActivity::class.java)
-//                startActivity(intent)
-//            }
         }
     }
 
-    private fun saveUserTypeToDatabase(uid: String?, userType: String) {
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users")
-        uid?.let {
-            databaseReference.child(it).child("userType").setValue(userType)
-        }
+    private fun addAccount(account: Account) {
+        val accountReference = databaseReference.child(account.id)
+        accountReference.setValue(account)
+            .addOnSuccessListener {
+                Log.d("MainActivity", "Account added successfully: $account")
+            }
+            .addOnFailureListener {
+                Log.d("MainActivity", "Error adding account: ", it)
+            }
     }
 
     private fun saveLoginStatus(isLoggedIn: Boolean) {
@@ -82,7 +89,7 @@ class SignUpFragment : Fragment() {
 
     private fun navigateToHomeOrAdmin(userType: String) {
         val intent = if (userType == "admin") {
-            Intent(requireContext(), HomeActivity::class.java)
+            Intent(requireContext(), AdminActivity::class.java)
         } else {
             Intent(requireContext(), HomeActivity::class.java)
         }

@@ -20,6 +20,7 @@
             android:layout_margin="12sp"
             android:gravity="center_horizontal">
 
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -30,16 +31,22 @@
                 />
 
             <EditText
-                android:id="@+id/et_email"
+                android:id="@+id/et_fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"/>
+                android:hint="Fullname"/>
 
             <EditText
                 android:id="@+id/et_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Username"/>
+
+            <EditText
+                android:id="@+id/et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"/>
 
             <EditText
                 android:id="@+id/et_password"
