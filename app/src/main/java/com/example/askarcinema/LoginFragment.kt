@@ -94,6 +94,7 @@ class LoginFragment : Fragment() {
             else -> {
                 Toast.makeText(requireContext(), "Invalid user role.", Toast.LENGTH_SHORT).show()
             }
+
         }
     }
 }
