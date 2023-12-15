@@ -2,6 +2,7 @@ package com.example.askarcinema
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.example.askarcinema.databinding.ActivityUserBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -17,14 +18,13 @@ class UserActivity : AppCompatActivity() {
         val adapter = UserAdapter(this)
         binding.viewPagerUser.adapter = adapter
 
-        // Use TabLayoutMediator to connect TabLayout with ViewPager2
-        TabLayoutMediator(binding.tabLayoutUser, binding.viewPagerUser) { tab, position ->
-            // You can customize tab labels if needed
-            tab.text = when (position) {
-                0 -> "Movies"
-                1 -> "Profile"
-                else -> "Invalid"
+        binding.bottomNavbar.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> binding.viewPagerUser.setCurrentItem(0, true)
+                R.id.nav_profile -> binding.viewPagerUser.setCurrentItem(1, true)
+                else -> return@setOnItemSelectedListener false
             }
-        }.attach()
+            true
+        }
     }
 }

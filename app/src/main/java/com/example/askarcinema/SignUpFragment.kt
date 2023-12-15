@@ -54,8 +54,8 @@ class SignUpFragment : Fragment() {
                                 // Save login status to SharedPreferences
                                 saveLoginStatus(true)
 
-                                // Navigate to HomeActivity or AdminActivity based on userType
-                                navigateToHomeOrAdmin(role)
+                                val intent= Intent(requireContext(), UserActivity::class.java)
+                                startActivity(intent)
                             } else {
                                 Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
                             }
@@ -87,14 +87,4 @@ class SignUpFragment : Fragment() {
         editor.apply()
     }
 
-    private fun navigateToHomeOrAdmin(userType: String) {
-        val intent = if (userType == "admin") {
-            Intent(requireContext(), AdminActivity::class.java)
-        } else {
-            Intent(requireContext(), HomeActivity::class.java)
-        }
-
-        startActivity(intent)
-        requireActivity().finish()  // Finish the hosting activity to prevent going back to the login/signup screen
-    }
 }
