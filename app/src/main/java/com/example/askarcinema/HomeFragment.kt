@@ -12,7 +12,7 @@ import com.example.askarcinema.databinding.FragmentHomeBinding
 import com.example.askarcinema.roomDatabase.MovieEntity
 import com.google.firebase.database.*
 
-// ... existing imports ...
+
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
