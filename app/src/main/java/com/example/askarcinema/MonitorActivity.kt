@@ -11,7 +11,6 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 
 class MonitorActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMonitorBinding
     private lateinit var monitorAdapter: MonitorAdapter
     private lateinit var movieList: MutableList<MovieData>
@@ -27,9 +26,11 @@ class MonitorActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
 
         // Create the MonitorAdapter with onItemClick and onDeleteClick listeners
-        monitorAdapter = MonitorAdapter(movieList,
+        monitorAdapter = MonitorAdapter(
+            movieList,
             onItemClick = { movieData -> navigateToEditActivity(movieData) },
-            onDeleteClick = { movieData -> deleteMovieData(movieData) })
+            onDeleteClick = { movieData -> deleteMovieData(movieData) }
+        )
 
         recyclerView.adapter = monitorAdapter
 

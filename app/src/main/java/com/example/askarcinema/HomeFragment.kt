@@ -12,8 +12,6 @@ import com.example.askarcinema.databinding.FragmentHomeBinding
 import com.example.askarcinema.roomDatabase.MovieEntity
 import com.google.firebase.database.*
 
-
-
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var movieAdapter: MovieAdapter

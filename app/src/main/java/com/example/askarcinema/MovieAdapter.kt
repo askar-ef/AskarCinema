@@ -11,12 +11,8 @@ import com.example.askarcinema.roomDatabase.MovieEntity
 
 class MovieAdapter(
     private val movieList: MutableList<MovieEntity>,
-    private val onItemLongClickListener: OnItemLongClickListener? = null
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
-    interface OnItemLongClickListener {
-        fun onItemLongClick(movieEntity: MovieEntity) // Perubahan disini
-    }
 
     class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.txt_movie_title)
@@ -37,12 +33,6 @@ class MovieAdapter(
         Glide.with(holder.itemView.context)
             .load(currentItem.imageUrl)
             .into(holder.image)
-
-        // Set the long click listener
-        holder.itemView.setOnLongClickListener {
-            onItemLongClickListener?.onItemLongClick(currentItem)
-            true
-        }
     }
 
     override fun getItemCount() = movieList.size

@@ -24,7 +24,8 @@
             android:layout_below="@id/askar_cinema"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
-            tools:listitem="@layout/list_item_monitor"/>
+            tools:listitem="@layout/list_item_monitor"
+            />
 
         <!-- Add Floating Action Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton

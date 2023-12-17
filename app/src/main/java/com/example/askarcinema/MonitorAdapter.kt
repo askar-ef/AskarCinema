@@ -45,5 +45,7 @@ class MonitorAdapter(
         }
     }
 
+
+
     override fun getItemCount() = movieList.size
 }

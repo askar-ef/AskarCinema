@@ -11,15 +11,28 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/askar_cinema"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cinema"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:layout_marginVertical="12dp"/>
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/logo_cinema"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/askarcinema"
+                android:paddingRight="20dp"
+                />
 
+            <TextView
+                android:id="@+id/txt_movies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movies"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:layout_marginVertical="12dp"
+                android:layout_toRightOf="@id/logo_cinema"/>
+
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

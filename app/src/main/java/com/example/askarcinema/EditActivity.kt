@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.askarcinema.databinding.ActivityEditBinding
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 
 class EditActivity : AppCompatActivity() {
 
@@ -23,7 +24,6 @@ class EditActivity : AppCompatActivity() {
 
         // Get the selected movie data from the Bundle
         val movieData = intent.extras?.getSerializable(EXTRA_MOVIE_DATA) as? MovieData
-
 
         // Update UI with the selected movie data
         movieData?.let {
@@ -79,6 +79,7 @@ class EditActivity : AppCompatActivity() {
             databaseReference.removeValue().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("Firebase", "Data deleted successfully")
+                    deleteFromStorage(it.imageUrl) // Delete image from storage
                     showToast("Data deleted successfully")
                     finish()
                 } else {
@@ -86,6 +87,15 @@ class EditActivity : AppCompatActivity() {
                     showToast("Error deleting data")
                 }
             }
+        }
+    }
+
+    private fun deleteFromStorage(imageUrl: String) {
+        val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
+        storageReference.delete().addOnSuccessListener {
+            Log.d("Firebase", "Image deleted from Storage")
+        }.addOnFailureListener { exception ->
+            Log.e("Firebase", "Error deleting image from Storage", exception)
         }
     }
 

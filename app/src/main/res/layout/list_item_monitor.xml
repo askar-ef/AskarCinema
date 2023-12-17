@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <!-- CardView sebagai wadah untuk gambar dan teks -->
     <androidx.cardview.widget.CardView
         android:id="@+id/movie_card"
@@ -10,7 +12,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="12dp">
 
         <!-- RelativeLayout di dalam CardView -->
         <RelativeLayout
@@ -43,10 +46,10 @@
                 android:id="@+id/ic_edit"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_below="@id/txt_movie_title"
-                android:layout_alignLeft="@id/img_movie_photo"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/txt_movie_title"
                 android:src="@drawable/outline_create_24" />
 
             <!-- Ikon Remove di pojok kanan bawah -->
@@ -54,10 +57,10 @@
                 android:id="@+id/ic_remove"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_below="@id/txt_movie_title"
-                android:layout_alignRight="@id/img_movie_photo"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/txt_movie_title"
                 android:src="@drawable/outline_cancel_24" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

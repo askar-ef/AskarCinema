@@ -40,30 +40,8 @@ class ProfileFragment : Fragment() {
             logout()
         }
 
-        // Load and display user data
-        loadUserData()
     }
 
-    private fun loadUserData() {
-        val userId = firebaseAuth.currentUser?.uid
-        userId?.let { uid ->
-            firestore.collection("accounts")
-                .document(uid)
-                .get()
-                .addOnSuccessListener { document ->
-                    val account = document.toObject(Account::class.java)
-                    account?.let {
-                        // Set the username to txtUsername
-                        binding.txtUsername.text = it.username
-                    } ?: run {
-                        Toast.makeText(requireContext(), "User data not found", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(requireContext(), "Error loading user data: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-        }
-    }
 
     private fun logout() {
         // Clear user session, update SharedPreferences, etc.
