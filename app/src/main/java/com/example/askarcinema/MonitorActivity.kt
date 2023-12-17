@@ -3,47 +3,48 @@ package com.example.askarcinema
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.askarcinema.databinding.FragmentMonitorBinding
+import com.example.askarcinema.databinding.ActivityMonitorBinding
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 
-class MonitorFragment : Fragment(), MovieAdapter.OnItemLongClickListener {
+class MonitorActivity : AppCompatActivity() {
 
-    private lateinit var binding: FragmentMonitorBinding
-    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var binding: ActivityMonitorBinding
+    private lateinit var monitorAdapter: MonitorAdapter
     private lateinit var movieList: MutableList<MovieData>
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMonitorBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMonitorBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         movieList = mutableListOf()
-        movieAdapter = MovieAdapter(movieList, this)
 
         val recyclerView: RecyclerView = binding.filmRecyclerView
-        recyclerView.adapter = movieAdapter
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+
+        // Create the MonitorAdapter with onItemClick and onDeleteClick listeners
+        monitorAdapter = MonitorAdapter(movieList,
+            onItemClick = { movieData -> navigateToEditActivity(movieData) },
+            onDeleteClick = { movieData -> deleteMovieData(movieData) })
+
+        recyclerView.adapter = monitorAdapter
 
         // Fetch data from Firebase and update movieList
         fetchMoviesFromFirebase()
+
+        binding.fabAddMovie.setOnClickListener {
+            val intent = Intent(this, UploadActivity::class.java)
+            startActivity(intent)
+        }
     }
 
-    override fun onItemLongClick(movieData: MovieData) {
+    private fun navigateToEditActivity(movieData: MovieData) {
         // Pass selected movie data to EditActivity using a Bundle
-        val intent = Intent(requireContext(), EditActivity::class.java)
+        val intent = Intent(this, EditActivity::class.java)
         val bundle = Bundle()
         bundle.putSerializable(EditActivity.EXTRA_MOVIE_DATA, movieData)
         intent.putExtras(bundle)
@@ -68,8 +69,6 @@ class MonitorFragment : Fragment(), MovieAdapter.OnItemLongClickListener {
     private fun deleteFromStorage(imageUrl: String) {
         val storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
         storageReference.delete().addOnSuccessListener {
-            // Item successfully deleted from Storage
-            // Refresh data in RecyclerView if needed
             fetchMoviesFromFirebase()
         }.addOnFailureListener { exception ->
             Log.e("Firebase", "Error deleting image from Storage", exception)
@@ -93,7 +92,7 @@ class MonitorFragment : Fragment(), MovieAdapter.OnItemLongClickListener {
                         movieList.add(it)
                     }
                 }
-                movieAdapter.notifyDataSetChanged()
+                monitorAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {

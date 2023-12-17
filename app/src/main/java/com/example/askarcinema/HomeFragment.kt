@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.askarcinema.databinding.FragmentHomeBinding
+import com.example.askarcinema.roomDatabase.MovieEntity
 import com.google.firebase.database.*
 
 // ... existing imports ...
@@ -16,7 +17,7 @@ import com.google.firebase.database.*
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var movieAdapter: MovieAdapter
-    private lateinit var movieList: MutableList<MovieData>
+    private lateinit var movieList: MutableList<MovieEntity>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +52,8 @@ class HomeFragment : Fragment() {
 
                 // Iterate through the snapshot and add MovieData objects to movieList
                 for (dataSnapshot in snapshot.children) {
-                    val movieData = dataSnapshot.getValue(MovieData::class.java)
-                    movieData?.let { movieList.add(it) }
+                    val movieEntity = dataSnapshot.getValue(MovieEntity::class.java)
+                    movieEntity?.let { movieList.add(it) }
                 }
 
                 // Notify the adapter that the data has changed

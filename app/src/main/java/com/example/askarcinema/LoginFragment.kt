@@ -82,12 +82,13 @@ class LoginFragment : Fragment() {
     private fun navigateToRoleSpecificActivity(role: String) {
         when (role) {
             "user" -> {
+                saveLoginStatus(true)
                 val intent = Intent(requireContext(), UserActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
             }
             "admin" -> {
-                val intent = Intent(requireContext(), AdminActivity::class.java)
+                val intent = Intent(requireContext(), MonitorActivity::class.java)
                 startActivity(intent)
                 requireActivity().finish()
             }
@@ -95,5 +96,11 @@ class LoginFragment : Fragment() {
                 Toast.makeText(requireContext(), "Invalid user role.", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun saveLoginStatus(isLoggedIn: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("isLoggedIn", isLoggedIn)
+        editor.apply()
     }
 }
