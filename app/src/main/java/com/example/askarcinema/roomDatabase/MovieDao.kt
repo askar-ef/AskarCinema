@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MovieDao {
 
+    @Query("SELECT * FROM movies WHERE id = :movieId")
+    suspend fun getMovieById(movieId: String): MovieEntity?
+
+
     @Query("SELECT * FROM movies")
     fun getAllMovies(): LiveData<List<MovieEntity>>
 

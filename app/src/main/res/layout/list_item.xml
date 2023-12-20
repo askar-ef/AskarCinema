@@ -37,9 +37,21 @@
                 android:layout_below="@id/img_movie_photo"
                 android:layout_centerHorizontal="true"
                 android:text="Movie Title"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:padding="10sp" />
+                android:paddingTop="7dp"/>
+
+            <TextView
+                android:id="@+id/txt_movie_genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_movie_title"
+                android:layout_centerHorizontal="true"
+                android:text="Genre"
+                android:textColor="@color/primaryColor"
+                android:textSize="12sp"
+                android:paddingTop="4dp"
+                android:paddingBottom="10dp"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

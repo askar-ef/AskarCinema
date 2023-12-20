@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.askarcinema.databinding.ActivityUserBinding
+import com.example.askarcinema.roomDatabase.MovieDao
+import com.example.askarcinema.roomDatabase.MovieRoomDatabase
 import com.google.android.material.tabs.TabLayoutMediator
 
 class UserActivity : AppCompatActivity() {

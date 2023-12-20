@@ -15,10 +15,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpFragment : Fragment() {
+
     private lateinit var binding: FragmentSignUpBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var notificationHelper: NotificationHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +36,9 @@ class SignUpFragment : Fragment() {
         firebaseAuth = FirebaseAuth.getInstance()
         sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         firestore = FirebaseFirestore.getInstance()
+
+        // Inisialisasi NotificationHelper
+        notificationHelper = NotificationHelper(requireContext())
 
         with(binding) {
             btnSignup.setOnClickListener {
@@ -54,10 +59,20 @@ class SignUpFragment : Fragment() {
                                 // Save login status to SharedPreferences
                                 saveLoginStatus(true)
 
-                                val intent= Intent(requireContext(), UserActivity::class.java)
+                                // Tampilkan notifikasi
+                                notificationHelper.showNotification(
+                                    "Selamat!",
+                                    "Hi! Selamat Bergabung!"
+                                )
+
+                                val intent = Intent(requireContext(), UserActivity::class.java)
                                 startActivity(intent)
                             } else {
-                                Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    task.exception?.message,
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                 }
@@ -66,19 +81,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun saveUserDataToFirestore(account: Account) {
-        firestore.collection("accounts")
-            .add(account)
-            .addOnSuccessListener { documentReference ->
-                Log.d("MainActivity", "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w("MainActivity", "Error adding document", e)
-                Toast.makeText(
-                    requireContext(),
-                    "Error adding document to Firestore: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        // Implementasi menyimpan data ke Firestore
     }
 
     private fun saveLoginStatus(isLoggedIn: Boolean) {
@@ -86,5 +89,4 @@ class SignUpFragment : Fragment() {
         editor.putBoolean("isLoggedIn", isLoggedIn)
         editor.apply()
     }
-
 }
