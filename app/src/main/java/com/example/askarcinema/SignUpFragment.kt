@@ -81,8 +81,19 @@ class SignUpFragment : Fragment() {
     }
 
     private fun saveUserDataToFirestore(account: Account) {
-        // Implementasi menyimpan data ke Firestore
+        val usersCollection = firestore.collection("accounts")
+
+        // Menambahkan data pengguna ke Firestore
+        usersCollection.document(account.username)
+            .set(account)
+            .addOnSuccessListener {
+                Log.d("SignUpFragment", "Data pengguna berhasil disimpan ke Firestore.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("SignUpFragment", "Gagal menyimpan data pengguna ke Firestore.", e)
+            }
     }
+
 
     private fun saveLoginStatus(isLoggedIn: Boolean) {
         val editor = sharedPreferences.edit()

@@ -7,15 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".MonitorActivity">
 
-        <TextView
+        <RelativeLayout
+            android:layout_centerHorizontal="true"
             android:id="@+id/askar_cinema"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Monitoring Cinema"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:layout_marginVertical="12dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/logo_cinema"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:paddingRight="20dp"
+                    android:src="@drawable/askarcinema" />
+
+                <TextView
+                    android:id="@+id/txt_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="12dp"
+                    android:layout_toRightOf="@id/logo_cinema"
+                    android:text="Movie Monitor"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btn_logout"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@id/txt_detail"
+                    android:src="@drawable/icon_logout" />
+
+        </RelativeLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

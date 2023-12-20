@@ -61,7 +61,6 @@ class LoginFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
                     val role = documents.documents[0]["role"] as String
-                    saveUserRole(role)
                     navigateToRoleSpecificActivity(role)
                 } else {
                     Toast.makeText(requireContext(), "User data not found.", Toast.LENGTH_SHORT).show()
@@ -71,12 +70,6 @@ class LoginFragment : Fragment() {
                 Log.w("LoginFragment", "Error getting documents.", e)
                 Toast.makeText(requireContext(), "Error getting user data: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-    }
-
-    private fun saveUserRole(role: String) {
-        val editor = sharedPreferences.edit()
-        editor.putString("userRole", role)
-        editor.apply()
     }
 
     private fun navigateToRoleSpecificActivity(role: String) {

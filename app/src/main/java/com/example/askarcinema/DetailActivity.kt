@@ -49,39 +49,3 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 }
-
-
-//package com.example.askarcinema
-//
-//import android.os.Bundle
-//import androidx.appcompat.app.AppCompatActivity
-//import com.example.askarcinema.databinding.ActivityDetailBinding
-//import com.example.askarcinema.roomDatabase.MovieEntity
-//import com.bumptech.glide.Glide
-//
-//class DetailActivity : AppCompatActivity() {
-//
-//    companion object {
-//        const val EXTRA_MOVIE_DATA = "extra_movie_data"
-//    }
-//
-//    private lateinit var binding: ActivityDetailBinding
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityDetailBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//
-//        val movieData = intent.getSerializableExtra(EXTRA_MOVIE_DATA) as? MovieEntity
-//
-//        movieData?.let {
-//            binding.txtMovieTitle.text = it.title
-//            binding.txtMovieGenre.text = it.genre
-//            binding.txtMovieDesc.text = it.desc
-//
-//            Glide.with(this)
-//                .load(it.imageUrl)
-//                .into(binding.imgMoviePhoto)
-//        }
-//    }
-//}

@@ -1,8 +1,11 @@
 package com.example.askarcinema
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,12 +17,13 @@ class MonitorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMonitorBinding
     private lateinit var monitorAdapter: MonitorAdapter
     private lateinit var movieList: MutableList<MovieData>
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMonitorBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         movieList = mutableListOf()
 
         val recyclerView: RecyclerView = binding.filmRecyclerView
@@ -36,6 +40,20 @@ class MonitorActivity : AppCompatActivity() {
 
         // Fetch data from Firebase and update movieList
         fetchMoviesFromFirebase()
+
+        binding.btnLogout.setOnClickListener{
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("isLoggedIn", false)
+            editor.apply()
+
+            // Show a toast message
+            Toast.makeText(this, "Logout successful", Toast.LENGTH_SHORT).show()
+
+
+            val intent = Intent(this, LoginRegisterActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         binding.fabAddMovie.setOnClickListener {
             val intent = Intent(this, UploadActivity::class.java)
